@@ -15,6 +15,16 @@
 
 <script>
 
+$(document).ready(function(){
+	
+	$("#companyPickup").click(function(){
+		id = $(".highlighted").find(".comp_id").html();
+		var comboZoomCompany = document.getElementById('orderForm_company_id');
+	    comboZoomCompany.value = id;
+		$('#companiesModal').modal('toggle');
+	});
+});
+
 function sync(item){
 	dateOfOrder = item.find(".dateOfOrder").html()
     numberOfOrder = item.find(".numberOfOrder").html()
@@ -48,11 +58,17 @@ function remove(id){
 
 <table>
 	<tr class = "header">
+		<th>Company</th>
+		<th>Bussiness year</th>
+		<th>Bussiness partner</th>
 		<th>Date of order</th>
 		<th>Number of order</th>
 	</tr>
 #{list items:orderForms, as:'orderForm'}
 	<tr>
+		<td class = "company">${orderForm.company.name}</td>
+		<td class = "businessYear">${orderForm.businessYear.year}</td>
+		<td class = "businessPartner">${orderForm.businessPartner.name}</td>
 		<td class = "dateOfOrder">${orderForm.dateOfOrder}</td>
 		<td class = "numberOfOrder">${orderForm.numberOfOrder}</td>
 		<td style = "visibility: hidden; max-width: 0px" class = "id">${orderForm.id}</td>
@@ -66,6 +82,45 @@ function remove(id){
 			#{field 'orderForm.id'}
 				<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
 			#{/}
+			<p>
+			#{field 'orderForm.company.id'}
+					<label for = "${field.id}">Company</label>
+					
+					<select name = "${field.name}" id = "${field.id}"/>
+						#{list items:companies, as:'company'}
+							<option value = "${company.id}">${company.name}</option>
+						#{/list}
+					</select>
+					<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#companiesModal">...	</button>
+			#{/}	
+			</p>
+			
+			<p>
+				#{field 'orderForm.businessYear.id'}
+					<label for = "${field.id}">Business Year</label>
+					
+					<select name = "${field.name}" id = "${field.id}"/>
+						#{list items:businessYears, as:'businessYear'}
+							<option value = "${businessYear.id}">${businessYear.year}</option>
+						#{/list}
+					</select>
+					
+				#{/}
+			</p>
+			
+			<p>
+				#{field 'orderForm.businessPartner.id'}
+					<label for = "${field.id}">Business Partner</label>
+					
+					<select name = "${field.name}" id = "${field.id}"/>
+						#{list items:businessPartners, as:'businessPartner'}
+							<option value = "${businessPartner.id}">${businessPartner.name}</option>
+						#{/list}
+					</select>
+					
+				#{/}
+			</p>
+			
 			<p>
 			#{field 'orderForm.numberOfOrder'}
 				<label for = "${field.id}">Number of order</label>
@@ -86,3 +141,31 @@ function remove(id){
 		</form>
 	</p>
 </div>
+
+<!-- Modal COMPANIES-->
+  <div class="modal fade" id="companiesModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+      <div class="modal-header">
+      	Companies
+      </div>
+      <div class="modal-body">
+	    <table style = "padding:2em">
+		<tr class = "header">
+		   <th>Name</th>
+		</tr>
+		#{list items:companies, as:'company'}
+		<tr>
+			<td class = "comp_name">${company.name}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "comp_id">${company.id}</td>
+		</tr>
+		#{/list}
+		</table>
+		<div class="modal-footer">
+			<input id = "companyPickup" type = "button" value = "Choose"/>
+		</div>
+		</div>
+      </div>
+    </div>
+   </div>
